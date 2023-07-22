@@ -18,7 +18,7 @@ const PasswordSchema = Yup.object().shape({
   passwordLength: Yup.number()
     .min(4, 'should be min of 4 characters')
     .max(16, 'should be max of 16 characters')
-    .required('LEngth is required'),
+    .required('Length is required'),
 });
 
 export default function App() {
@@ -58,7 +58,7 @@ export default function App() {
   const createPassword = (characters: string, passwordLength: number) => {
     let result = '';
     for (let i = 0; i < passwordLength; i++) {
-      const characterIndex = Math.round(Math.random() * characters.length);
+      const characterIndex = Math.round(Math.random() * characters.length); // give random nums
       result += characters.charAt(characterIndex);
     }
     return result;
@@ -123,7 +123,7 @@ export default function App() {
                   />
                 </View>
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.heading}>Include LowerCase</Text>
+                  <Text style={styles.heading}>Include UpperCase</Text>
                   <BouncyCheckbox
                     disableBuiltInState
                     isChecked={upperCase}
@@ -132,7 +132,7 @@ export default function App() {
                   />
                 </View>
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.heading}>Include LowerCase</Text>
+                  <Text style={styles.heading}>Include Numbers</Text>
                   <BouncyCheckbox
                     disableBuiltInState
                     isChecked={numbers}
@@ -141,7 +141,7 @@ export default function App() {
                   />
                 </View>
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.heading}>Include LowerCase</Text>
+                  <Text style={styles.heading}>Include Symbols</Text>
                   <BouncyCheckbox
                     disableBuiltInState
                     isChecked={symbols}
@@ -154,17 +154,35 @@ export default function App() {
                 <View style={styles.inputWrapper}></View>
 
                 <View style={styles.formActions}>
-                  <TouchableOpacity>
-                    <Text>Generate Password</Text>
+                  <TouchableOpacity
+                    disabled={!isValid}
+                    style={styles.primaryBtn}
+                    onPress={handleSubmit}>
+                    <Text style={styles.primaryBtnTxt}>Generate Password</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text>Reset</Text>
+
+                  <TouchableOpacity
+                    style={styles.secondaryBtn}
+                    onPress={() => {
+                      handleReset();
+                      resetPasswordState();
+                    }}>
+                    <Text style={styles.secondaryBtnTxt}>Reset</Text>
                   </TouchableOpacity>
                 </View>
               </>
             )}
           </Formik>
         </View>
+        {isPassGenerated ? (
+          <View style={[styles.card, styles.cardElevated]}>
+            <Text style={styles.subTitle}>Result:</Text>
+            <Text style={styles.description}>Long Press to copy:</Text>
+            <Text selectable={true} style={styles.generatedPassword}>
+              {password}
+            </Text>
+          </View>
+        ) : null}
       </SafeAreaView>
     </ScrollView>
   );
